@@ -5,12 +5,18 @@ import pytest
 def setup(browser):
     if browser=='chrome':
         driver=webdriver.Chrome()
+        driver.maximize_window()
+        driver.implicitly_wait(30)
         print("Launching Chrome browser.........")
     elif browser=='firefox':
         driver = webdriver.Firefox()
+        driver.maximize_window()
+        driver.implicitly_wait(30)
         print("Launching Firefox browser.........")
     else:
         driver=webdriver.Ie()
+        driver.maximize_window()
+        driver.implicitly_wait(30)
     return driver
 
 
