@@ -1,5 +1,3 @@
-import email
-import imaplib
 import time
 from selenium.webdriver.common.by import By
 
@@ -21,13 +19,9 @@ class LoginPage:
     zohoPassword_ID = "password"
     zohoSignIn_ID = "nextbtn"
     zohoRemind_XPATH = "//a[contains(text(),'Remind me later')]"
-    zohoMailFolder_Xpath = "//span[contains(text(),'BigCommerceAuth')]"
+    zohoMailFolder_Xpath = "//span[contains(text(),'$folderName')]"
     zohomail_Xpath = "(//div[contains(@class,'zmList')])[1]"
     zohoMailOTP_Xpath = "(//td[@align='left' and @valign='top'])[17]/div/div/div/p/span"
-
-    emailHost = ReadConfig.getHostName()
-    emailId = ReadConfig.getMailId()
-    emailPassword = ReadConfig.getMailPassword()
 
     def __init__(self, driver):
         self.driver = driver
@@ -52,22 +46,22 @@ class LoginPage:
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
         time.sleep(10)
 
-    def mailLogIn(self, mailID, mailPassword):
+    def mailLogIn(self,emailHost, mailID, mailPassword,folder):
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
-        self.driver.get(self.emailHost)
+        self.driver.get(emailHost)
         self.driver.find_element(By.XPATH, self.zohoMailSignIn_Xpath).click()
         self.driver.find_element(By.ID, self.zohoLogIn_ID).send_keys(mailID)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
         time.sleep(10)
         self.driver.find_element(By.ID, self.zohoPassword_ID).send_keys(mailPassword)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
-        time.sleep(50)
-        self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath).click()
+        time.sleep(15)
+        self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath.replace("$folderName",folder)).click()
         time.sleep(20)
         self.driver.find_element(By.XPATH, self.zohomail_Xpath).click()
-        time.sleep(20)
-        self.driver.execute_script("window.scrollBy(0,100)", "")
+        time.sleep(5)
+        self.driver.execute_script("window.scrollBy(0,200)", "")
         time.sleep(5)
         otpText = self.driver.find_element(By.XPATH, self.zohoMailOTP_Xpath).text
         myOTP = otpText.strip(' ').split(' ', 1)[0]
