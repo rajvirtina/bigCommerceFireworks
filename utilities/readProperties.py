@@ -33,3 +33,13 @@ class ReadConfig:
     def getMailPassword():
         mailPassword = config.get('common info', 'MailPassword')
         return mailPassword
+
+    @staticmethod
+    def getnameID():
+        nameId = config.get('common info', 'nameId')
+        return nameId
+
+    @staticmethod
+    def getwebsite():
+        web = config.get('common info', 'website')
+        return web
