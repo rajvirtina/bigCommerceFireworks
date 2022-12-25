@@ -1,7 +1,6 @@
 import time
-from selenium.webdriver.common.by import By
 
-from utilities.readProperties import ReadConfig
+from selenium.webdriver.common.by import By
 
 
 class LoginPage:
@@ -36,7 +35,7 @@ class LoginPage:
 
     def clickLogin(self):
         self.driver.find_element(By.ID, self.button_login_id).click()
-        time.sleep(10)
+        time.sleep(20)
 
     def selectAccount(self):
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
@@ -46,7 +45,7 @@ class LoginPage:
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
         time.sleep(10)
 
-    def mailLogIn(self,emailHost, mailID, mailPassword,folder):
+    def mailLogIn(self, emailHost, mailID, mailPassword, folder):
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
         self.driver.get(emailHost)
@@ -57,7 +56,7 @@ class LoginPage:
         self.driver.find_element(By.ID, self.zohoPassword_ID).send_keys(mailPassword)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
         time.sleep(15)
-        self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath.replace("$folderName",folder)).click()
+        self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath.replace("$folderName", folder)).click()
         time.sleep(20)
         self.driver.find_element(By.XPATH, self.zohomail_Xpath).click()
         time.sleep(5)

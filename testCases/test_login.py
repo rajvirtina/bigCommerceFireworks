@@ -1,8 +1,7 @@
 import pytest
-from selenium import webdriver
 from pageObjects.LoginPage import LoginPage
-from utilities.readProperties import ReadConfig
 from utilities.customLogger import LogGen
+from utilities.readProperties import ReadConfig
 
 
 class Test_001_Login:
@@ -14,6 +13,8 @@ class Test_001_Login:
     emailId = ReadConfig.getMailId()
     emailPassword = ReadConfig.getMailPassword()
 
+    @pytest.mark.order2
+    @pytest.mark.regression
     def test_login(self, setup):
         self.logger.info("****************** Verifying Login to the BigCommerce ****************")
         self.driver = setup  # webdriver.Chrome()
@@ -22,7 +23,7 @@ class Test_001_Login:
         self.lp.setusername(self.userName)
         self.lp.setpassword(self.password)
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailId,self.emailPassword,"BigCommerceAuth")
+        self.lp.mailLogIn(self.emailHost,self.emailId, self.emailPassword, "BigCommerceAuth")
         self.lp.selectAccount()
         self.lp.selectStore()
         self.driver.save_screenshot(".\\Screenshots\\" + "test_login.png")
@@ -33,8 +34,6 @@ class Test_001_Login:
         if act_title == exp_title:
             self.logger.info("*** Succesfully lands in the Bigcommerce DashBorad ***")
         elif act_title != exp_title:
-            if self.exp == 'Pass':
-                self.logger.info("**** Succesfully not lands in the Bigcommerce DashBorad ****")
+            self.logger.info("**** Succesfully not lands in the Bigcommerce DashBorad ****")
         self.driver.close()
         self.logger.info("******* End of Login to the BigCommerce **********")
-

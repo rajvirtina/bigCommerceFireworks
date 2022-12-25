@@ -1,12 +1,13 @@
 import configparser
 
-config=configparser.RawConfigParser()
+config = configparser.RawConfigParser()
 config.read(".\\Configaration\\config.ini")
+
 
 class ReadConfig:
     @staticmethod
     def getApplicationURL():
-        url=config.get('common info','baseURL')
+        url = config.get('common info', 'baseURL')
         return url
 
     @staticmethod
@@ -40,6 +41,6 @@ class ReadConfig:
         return nameId
 
     @staticmethod
-    def getwebsite():
+    def getWebsite():
         web = config.get('common info', 'website')
         return web
