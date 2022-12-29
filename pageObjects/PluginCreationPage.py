@@ -13,7 +13,7 @@ class PluginCreationPage:
     app_link_Xpath = "//ng-transclude/child::div/h2"
     btn_img_app_link_Xpath = "(//ng-transclude/child::div/h2[text()='$Applink']/../../preceding::figcaption/a)[5]"
     btn_install_Xpath = "//button[@class='button button--primary']"
-    terms_frame_Name = "cp-iframe"
+    terms_frame_Xpath = "//*[@title='App iframe']"
     btn_checkBox_Id = "pci_confirmation"
     btn_confirm_terms_Xpath = "//button[contains(text(),'Confirm')]"
     txtbox_email_firework_Name = "email"
@@ -68,8 +68,10 @@ class PluginCreationPage:
         time.sleep(5)
         self.driver.switch_to.default_content()
         time.sleep(10)
-        self.driver.switch_to.frame(self.terms_frame_Name)
-        time.sleep(1000)
+        element = self.driver.find_element(By.XPATH, self.terms_frame_Xpath)
+        self.driver.switch_to.frame(element)
+        time.sleep(10)
+        print("entered into the frame")
         self.driver.find_element(By.ID, self.btn_checkBox_Id).click()
         self.driver.find_element(By.XPATH, self.btn_confirm_terms_Xpath).click()
         time.sleep(10)

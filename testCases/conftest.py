@@ -5,7 +5,9 @@ from selenium import webdriver
 @pytest.fixture()
 def setup(browser):
     if browser == 'chrome':
-        driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-popup-blocking")
+        driver = webdriver.Chrome(options=options)
         driver.maximize_window()
         driver.implicitly_wait(30)
         print("Launching Chrome browser.........")

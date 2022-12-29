@@ -8,7 +8,7 @@ class Test_001_Login:
     baseURL = ReadConfig.getApplicationURL()
     userName = ReadConfig.getUseremail()
     password = ReadConfig.getPassword()
-    logger = LogGen.loggen()
+    logger = LogGen.logger()
     emailHost = ReadConfig.getHostName()
     emailId = ReadConfig.getMailId()
     emailPassword = ReadConfig.getMailPassword()
