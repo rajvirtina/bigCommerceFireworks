@@ -44,3 +44,8 @@ class ReadConfig:
     def getWebsite():
         web = config.get('common info', 'website')
         return web
+
+    @staticmethod
+    def getRedirectedURL():
+        redirect = config.get('common info', 'redirectedUrl')
+        return redirect

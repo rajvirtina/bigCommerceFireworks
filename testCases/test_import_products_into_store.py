@@ -1,15 +1,14 @@
-import string
-import random
-
 import pytest
+
+from pageObjects.ImportProductsIntoStorePage import ImportProductsIntoStorePage
 from pageObjects.LoginPage import LoginPage
 from pageObjects.PluginCreationPage import PluginCreationPage
-from testCases.test_login import Test_001_Login
 from utilities.customLogger import LogGen
 from utilities.readProperties import ReadConfig
 
 
-class Test_002_Creation:
+class Test_003_Importing:
+    redirectedUrl = ReadConfig.getRedirectedURL()
     userName = ReadConfig.getUseremail()
     password = ReadConfig.getPassword()
     logger = LogGen.logger()
@@ -19,14 +18,10 @@ class Test_002_Creation:
     NameId = ReadConfig.getnameID()
     websiteId = ReadConfig.getWebsite()
     baseURL = ReadConfig.getApplicationURL()
-    redirectedUrl = ReadConfig.getRedirectedURL()
 
-    @pytest.mark.order1
+    @pytest.mark.order3
     @pytest.mark.regression
-    def testPlugInInstall(self, setup):
-        log = self.logger
-        res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
-        log.info("******************Logging to the Application****************")
+    def test_importProducts(self, setup):
         self.driver = setup
         self.driver.get(self.baseURL)
         self.lp = LoginPage(self.driver)
@@ -36,17 +31,21 @@ class Test_002_Creation:
         self.lp.mailLogIn(self.emailHost, self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
         self.lp.selectAccount()
         self.lp.selectStore()
-        self.logger.info("****************** Verifying Installing the Plugin ****************")
         self.cp = PluginCreationPage(self.driver)
         self.cp.clickOnApps("Apps")
         self.cp.selectApp("Firework")
         self.cp.installApp(self.redirectedUrl)
-        self.driver.save_screenshot(".\\Screenshots\\" + res + "test_installing_app.png")
         self.cp.confirmUserDetails(self.userName)
         self.cp.enteringOTP(self.emailHost, "PluginCreationAuth")
-        self.driver.save_screenshot(".\\Screenshots\\" + res + "test_businessDetails_app.png")
         self.cp.businessDetails(self.NameId, self.emailId, self.websiteId)
         self.cp.verifyPlugInCreated("Apps")
-        self.driver.save_screenshot(".\\Screenshots\\" + res + "test_pluginInstallation_app.png")
-        self.cp.uninstallPlugin("Apps")
+        self.driver.save_screenshot(".\\Screenshots\\" + "test_PlugInCreated.png")
+        self.cpp = ImportProductsIntoStorePage(self.driver)
+        self.cpp.launchPlugin()
+        self.cpp.verifyAndNavigateTab("Business Portal", "Clothing Store", "Import products")
+        self.cpp.selectProduct("[Sample] Fog Linen Chambray Towel - Beige Stripe")
+        self.cpp.verifyAddedProductInProductsTab("Products", "[Sample] Fog Linen Chambray Towel - Beige Stripe")
+        self.driver.save_screenshot(".\\Screenshots\\" + "test_ProductAvailable_ProductTab.png")
+        self.cpp.searchProductInProductTab("[Sample] Fog Linen Chambray Towel - Beige Stripe")
+        self.cpp.navigateToProductURL("Apps")
         self.cp.logOut("My Profile")

@@ -1,6 +1,7 @@
 import time
-
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 class LoginPage:
@@ -21,6 +22,8 @@ class LoginPage:
     zohoMailFolder_Xpath = "//span[contains(text(),'$folderName')]"
     zohomail_Xpath = "(//div[contains(@class,'zmList')])[1]"
     zohoMailOTP_Xpath = "(//td[@align='left' and @valign='top'])[17]/div/div/div/p/span"
+    zohoMailProfileImg_Xpath = "//img[@class='zmavatar__image']"
+    zohoMailSignOut_Xpath = "//button/child::span[contains(text(),'Sign out')]"
 
     def __init__(self, driver):
         self.driver = driver
@@ -35,7 +38,7 @@ class LoginPage:
 
     def clickLogin(self):
         self.driver.find_element(By.ID, self.button_login_id).click()
-        time.sleep(20)
+        time.sleep(10)
 
     def selectAccount(self):
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
@@ -45,7 +48,7 @@ class LoginPage:
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
         time.sleep(10)
 
-    def mailLogIn(self, emailHost, mailID, mailPassword, folder):
+    def mailLogIn(self, emailHost, mailID, mailPassword, folder, text):
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
         self.driver.get(emailHost)
@@ -55,7 +58,6 @@ class LoginPage:
         time.sleep(10)
         self.driver.find_element(By.ID, self.zohoPassword_ID).send_keys(mailPassword)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
-        time.sleep(15)
         self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath.replace("$folderName", folder)).click()
         time.sleep(20)
         self.driver.find_element(By.XPATH, self.zohomail_Xpath).click()
@@ -65,8 +67,13 @@ class LoginPage:
         otpText = self.driver.find_element(By.XPATH, self.zohoMailOTP_Xpath).text
         myOTP = otpText.strip(' ').split(' ', 1)[0]
         print(myOTP)
-        self.driver.close()
-        self.driver.switch_to.window(self.driver.window_handles[0])
+        if text.__eq__("signOut"):
+            self.mailLogOut()
+        elif text.__eq__("continue"):
+            self.driver.close()
+            self.driver.switch_to.window(self.driver.window_handles[0])
+        else:
+            print("Mail Got Terminated")
         time.sleep(10)
         self.driver.execute_script("window.scrollBy(0,200)", "")
         time.sleep(5)
@@ -75,3 +82,9 @@ class LoginPage:
         time.sleep(10)
         self.driver.find_element(By.XPATH, self.verifyPageSubmit_Xpath).click()
         time.sleep(20)
+
+    def mailLogOut(self):
+        self.driver.find_element(By.XPATH, self.zohoMailProfileImg_Xpath).click()
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.element_to_be_clickable((By.XPATH, self.zohoMailSignOut_Xpath)))
+        self.driver.find_element(By.XPATH, self.zohoMailSignOut_Xpath).click()

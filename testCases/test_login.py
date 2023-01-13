@@ -13,7 +13,7 @@ class Test_001_Login:
     emailId = ReadConfig.getMailId()
     emailPassword = ReadConfig.getMailPassword()
 
-    @pytest.mark.order2
+    @pytest.mark.order1
     @pytest.mark.regression
     def test_login(self, setup):
         self.logger.info("****************** Verifying Login to the BigCommerce ****************")
@@ -23,7 +23,7 @@ class Test_001_Login:
         self.lp.setusername(self.userName)
         self.lp.setpassword(self.password)
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailHost,self.emailId, self.emailPassword, "BigCommerceAuth")
+        self.lp.mailLogIn(self.emailHost,self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
         self.lp.selectAccount()
         self.lp.selectStore()
         self.driver.save_screenshot(".\\Screenshots\\" + "test_login.png")
@@ -32,8 +32,8 @@ class Test_001_Login:
         exp_title = "LatitudeFin BigCommerce Control Panel"
 
         if act_title == exp_title:
-            self.logger.info("*** Succesfully lands in the Bigcommerce DashBorad ***")
+            self.logger.info("*** Successfully lands in the Bigcommerce DashBoard ***")
         elif act_title != exp_title:
-            self.logger.info("**** Succesfully not lands in the Bigcommerce DashBorad ****")
+            self.logger.info("**** Successfully not lands in the Bigcommerce DashBoard ****")
         self.driver.close()
         self.logger.info("******* End of Login to the BigCommerce **********")
