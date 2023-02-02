@@ -38,15 +38,14 @@ class LoginPage:
 
     def clickLogin(self):
         self.driver.find_element(By.ID, self.button_login_id).click()
-        time.sleep(10)
 
     def selectAccount(self):
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
-        time.sleep(10)
 
     def selectStore(self):
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
-        time.sleep(10)
 
     def mailLogIn(self, emailHost, mailID, mailPassword, folder, text):
         self.driver.execute_script("window.open('');")
@@ -55,7 +54,7 @@ class LoginPage:
         self.driver.find_element(By.XPATH, self.zohoMailSignIn_Xpath).click()
         self.driver.find_element(By.ID, self.zohoLogIn_ID).send_keys(mailID)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
-        time.sleep(10)
+        time.sleep(5)
         self.driver.find_element(By.ID, self.zohoPassword_ID).send_keys(mailPassword)
         self.driver.find_element(By.ID, self.zohoSignIn_ID).click()
         self.driver.find_element(By.XPATH, self.zohoMailFolder_Xpath.replace("$folderName", folder)).click()
@@ -81,10 +80,10 @@ class LoginPage:
         self.driver.find_element(By.ID, self.otpVerifyPage_ID).send_keys(myOTP)
         time.sleep(10)
         self.driver.find_element(By.XPATH, self.verifyPageSubmit_Xpath).click()
-        time.sleep(20)
 
     def mailLogOut(self):
         self.driver.find_element(By.XPATH, self.zohoMailProfileImg_Xpath).click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.element_to_be_clickable((By.XPATH, self.zohoMailSignOut_Xpath)))
         self.driver.find_element(By.XPATH, self.zohoMailSignOut_Xpath).click()
+        time.sleep(2)

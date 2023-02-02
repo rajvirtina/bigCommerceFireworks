@@ -2,11 +2,11 @@ import time
 import random
 
 from selenium.webdriver.common.by import By
-
 from pageObjects.LoginPage import LoginPage
 
 
 class PluginCreationPage:
+    btn_home_Id = "nav-dashboard"
     btn_menu_Xpath = "//*[@class='cp-nav-link']/span[text()='$mainMenu']"  # Apps
     btn_link_navigate_Xpath = "//ul[@role='group']/a[text()='My Apps']"
     btn_app_list_Xpath = "//span[text()='My Draft Apps']"
@@ -24,31 +24,36 @@ class PluginCreationPage:
     btn_authorize_Xpath = "//button[contains(text(),'Authorize')]"
     btn_create_business_Xpath = "//a[contains(text(), 'Create business')]"
     txtbox_business_form_name_Id = "business-form_name"
+    btn_select_business_Xpath = "//span[text()='$nameID']/../../button"
     txtbox_primary_email_address_Id = "business-form_primary_email_address"
     txtbox_business_form_website_Id = "business-form_website"
     btn_business_details_Xpath = "//button[contains(text(),'Save')]"
-    btn_select_business_Xpath = "(//button[contains(text(),'Select')])[1]"
-    btn_plugin_Xpath = "//ul[@role='group']/a/span[text()='Fireworks']"
+    #btn_select_business_Xpath = "(//button[contains(text(),'Select')])[1]"
+    btn_plugin_Xpath = "//ul[@role='group']/a/span[text()='Firework']"
     my_apps_link_Xpath = "//ng-transclude/child::div/h1"
-    uninstall_plugin_Xpath = "//h1[contains(text(),'Fireworks')]/../../footer/a/span[text()='Uninstall']"
+    uninstall_plugin_Xpath = "//h1[contains(text(),'Firework')]/../../footer/a/span[text()='Uninstall']"
     back_to_main_menu_Xpath = "(//button[@aria-label='Back to main navigation'])[9]"
     btn_logOut_Xpath = "//button[contains(text(),'Log Out')]"
     text_zohoReMailOTP_Xpath = "(//td[@ align='center'])[3]"
     btn_back_menu_Xpath = "//*[@class='cp-nav-link cp-nav-link--crumb']/span[text()='$mainMenu']"
+    business_store_verify_Xpath = "//span[@class='business-name' and contains(text(),'$businessName')]"
 
     def __init__(self, driver):
         self.driver = driver
 
     def clickOnApps(self, menuName):
         self.driver.find_element(By.XPATH, self.btn_menu_Xpath.replace('$mainMenu', menuName)).click()
-        time.sleep(10)
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.btn_link_navigate_Xpath).click()
         self.driver.switch_to.frame(self.myapps_frame_Id)
-        time.sleep(10)
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.btn_app_list_Xpath).click()
-        time.sleep(10)
+        time.sleep(5)
+        self.driver.switch_to.default_content()
 
     def selectApp(self, appName):
+        self.driver.switch_to.frame(self.myapps_frame_Id)
+        time.sleep(3)
         apps = self.driver.find_elements(By.XPATH, self.app_link_Xpath)
         for i in apps:
             appText = i.text
@@ -88,7 +93,7 @@ class PluginCreationPage:
         time.sleep(10)
         self.driver.find_element(By.NAME, self.txtbox_email_firework_Name).send_keys(username)
         self.driver.find_element(By.ID, self.btn_continue_email_Id).click()
-        time.sleep(50)
+        time.sleep(5)
 
     def enteringOTP(self, emailHost, folder):
         self.lp = LoginPage(self.driver)
@@ -108,10 +113,10 @@ class PluginCreationPage:
         finalOTP = myOTP.replace(" ", "")
         print(finalOTP)
         self.lp.mailLogOut()
-        time.sleep(10)
         self.driver.close()
+        time.sleep(5)
         self.driver.switch_to.window(self.driver.window_handles[0])
-        time.sleep(30)
+        time.sleep(5)
         otp = finalOTP
         otp_split = [each_num for each_num in otp]
         for i in range(4):
@@ -120,11 +125,32 @@ class PluginCreationPage:
                                                     [i + 2]))
             otp_elem.send_keys(otp_split[i])
 
+    def CreateNewBusinessDetails(self, nameId, emailId, website):
+        time.sleep(5)
+        element = self.driver.find_element(By.XPATH, self.btn_create_business_Xpath)
+        self.driver.execute_script("arguments[0].scrollIntoView();", element)
+        element.click()
+        time.sleep(10)
+        randomValue = random.randint(1, 100)
+        name = nameId + str(randomValue)
+        self.driver.find_element(By.ID, self.txtbox_business_form_name_Id).send_keys(name)
+        time.sleep(5)
+        self.driver.find_element(By.ID, self.txtbox_primary_email_address_Id).send_keys(emailId)
+        time.sleep(5)
+        self.driver.find_element(By.ID, self.txtbox_business_form_website_Id).send_keys(website)
+        time.sleep(5)
+        self.driver.find_element(By.XPATH, self.btn_business_details_Xpath).click()
+        time.sleep(20)
+        self.driver.save_screenshot(".\\Screenshots\\" + "BusinessCreated.png")
+        t = self.driver.find_element(By.XPATH, self.business_store_verify_Xpath.replace("$businessName", name))
+        print(t.is_displayed())
+
     def businessDetails(self, nameId, emailId, website):
-        element = self.driver.find_element(By.XPATH, self.btn_select_business_Xpath)
+        time.sleep(6)
+        element = self.driver.find_element(By.XPATH, self.btn_select_business_Xpath.replace("$nameID", nameId))
         if element.is_displayed():
             time.sleep(10)
-            self.driver.find_element(By.XPATH, self.btn_select_business_Xpath).click()
+            element.click()
         else:
             self.driver.find_element(By.XPATH, self.btn_create_business_Xpath).click()
             time.sleep(10)
@@ -136,8 +162,8 @@ class PluginCreationPage:
             self.driver.find_element(By.ID, self.txtbox_business_form_website_Id).send_keys(website)
             time.sleep(5)
             self.driver.find_element(By.XPATH, self.btn_business_details_Xpath).click()
-            time.sleep(10)
-            self.driver.find_element(By.XPATH, self.btn_select_business_Xpath).click()
+            time.sleep(20)
+            self.driver.find_element(By.XPATH, self.btn_select_business_Xpath.replace("$nameID", nameId)).click()
 
     def verifyPlugInCreated(self, menuName):
         time.sleep(20)
@@ -146,7 +172,7 @@ class PluginCreationPage:
         self.driver.find_element(By.XPATH, self.btn_link_navigate_Xpath).click()
         time.sleep(10)
         plugIn = self.driver.find_element(By.XPATH, self.btn_plugin_Xpath).text
-        if plugIn == "Fireworks":
+        if plugIn == "Firework":
             print("**********Fireworks App is Installed Successfully********")
         else:
             print("**********Fireworks App Not Installed********")
@@ -169,9 +195,12 @@ class PluginCreationPage:
         self.driver.find_element(By.XPATH, self.btn_back_menu_Xpath.replace('$mainMenu', menuName)).click()
 
     def logOut(self, menuName):
-        time.sleep(20)
+        self.driver.switch_to.default_content()
+        self.driver.find_element(By.ID, self.btn_home_Id).click()
+        time.sleep(10)
         self.driver.find_element(By.XPATH, self.btn_menu_Xpath.replace('$mainMenu', menuName)).click()
         self.driver.execute_script("window.scrollBy(0,250)", "")
         time.sleep(20)
         self.driver.find_element(By.XPATH, self.btn_logOut_Xpath).click()
         print("BigCommerce Application Logged Out Successfully")
+        self.driver.close()

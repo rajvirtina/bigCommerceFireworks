@@ -4,7 +4,6 @@ import random
 import pytest
 from pageObjects.LoginPage import LoginPage
 from pageObjects.PluginCreationPage import PluginCreationPage
-from testCases.test_login import Test_001_Login
 from utilities.customLogger import LogGen
 from utilities.readProperties import ReadConfig
 
@@ -21,7 +20,7 @@ class Test_002_Creation:
     baseURL = ReadConfig.getApplicationURL()
     redirectedUrl = ReadConfig.getRedirectedURL()
 
-    @pytest.mark.order1
+    @pytest.mark.order(2)
     @pytest.mark.regression
     def testPlugInInstall(self, setup):
         log = self.logger
@@ -47,6 +46,6 @@ class Test_002_Creation:
         self.driver.save_screenshot(".\\Screenshots\\" + res + "test_businessDetails_app.png")
         self.cp.businessDetails(self.NameId, self.emailId, self.websiteId)
         self.cp.verifyPlugInCreated("Apps")
+        self.logger.info("*** Firework application is Installed successfully ***")
         self.driver.save_screenshot(".\\Screenshots\\" + res + "test_pluginInstallation_app.png")
-        self.cp.uninstallPlugin("Apps")
         self.cp.logOut("My Profile")

@@ -13,7 +13,7 @@ class Test_001_Login:
     emailId = ReadConfig.getMailId()
     emailPassword = ReadConfig.getMailPassword()
 
-    @pytest.mark.order1
+    @pytest.mark.order(1)
     @pytest.mark.regression
     def test_login(self, setup):
         self.logger.info("****************** Verifying Login to the BigCommerce ****************")
@@ -23,7 +23,7 @@ class Test_001_Login:
         self.lp.setusername(self.userName)
         self.lp.setpassword(self.password)
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailHost,self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
+        self.lp.mailLogIn(self.emailHost, self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
         self.lp.selectAccount()
         self.lp.selectStore()
         self.driver.save_screenshot(".\\Screenshots\\" + "test_login.png")
