@@ -24,3 +24,9 @@ Select the Interpreter and search below libraries and click install:
 9) openpyxl
 10) allure-pytest
 11) allure-python-commons
+
+# To Execute single class, use below comand line in the terminal
+pytest -v --browser chrome testCases/specificTestName.py --html=Reports/report.html
+
+# To Execute all classes as once, use below comand line in the terminal
+pytest -v --browser chrome testCases/ --html=Reports/report.html
