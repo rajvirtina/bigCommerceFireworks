@@ -91,7 +91,15 @@ class PluginCreationPage:
 
     def confirmUserDetails(self, username):
         time.sleep(10)
-        self.driver.find_element(By.NAME, self.txtbox_email_firework_Name).send_keys(username)
+        element = self.driver.find_element(By.NAME, self.txtbox_email_firework_Name)
+        emailID = element.get_attribute("value")
+        if emailID == username:
+            print("Email ID Populated:" + emailID)
+        elif not emailID == username:
+            print("Incorrect Email ID Populated:" + emailID)
+        else:
+            print("No EmailId Existed")
+            element.send_keys(username)
         self.driver.find_element(By.ID, self.btn_continue_email_Id).click()
         time.sleep(5)
 
