@@ -46,7 +46,7 @@ class Test_005_Widget_Creation:
         self.logger.info("*** Business Details Selected Successfully ***")
         self.cwcp.addWidget("Widget Configuration")
         #WidgetName, channelName, playListName, videoName, displayPositionOfVideo, positionOfVideo, videoOpenIn
-        self.cwcp.saveWidget("WidgetTesting", "QA-Channel", "Qa-Playlist-1", "TEST_VIDEO1", "Infinite", "Bottom Right", "New Tab")
+        self.cwcp.saveWidget("WidgetTesting", "Zen Channel", "play one", "V2", "Infinite", "Bottom Right", "New Tab")
         self.cwcp.VerifyWidget("WidgetTesting")
         self.logger.info("*** All Widgets Created & Verified Successfully ***")
         self.cwcp.editPlaylistWidget("Qa-Playlist-2")
