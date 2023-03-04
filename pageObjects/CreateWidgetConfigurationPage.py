@@ -19,10 +19,8 @@ class CreateWidgetConfigurationPage:
     btn_specific_grids_Xpath = "//div[contains(text(),'$widgetName')]/img"
     btn_widget_forms_Xpath = "form > p"
     drpdwn_channel_selects_Xpath = "(//select[@class='form-control'])[$index]"
-    drpdwn_playList_selects_Xpath = "(//label[text()='PlayList List']/../select)[$index]"
-    drpdwn_videoList_selects_Xpath = "(//label[text()='Videos']/../select)[$index]"
-    # txt_name_of_widget_Xpath = "(//input[@class='form-control'])['$index']"
-    txt_name_of_widget_Xpath = "(//label[text()='Name for the widget']/../input)[$index]"
+    drpdwn_playList_selects_Xpath = "(//label[contains(text(),'PlayList List')]/../select)[$index]"
+    txt_name_of_widget_Xpath = "(//label[contains(text(),'Name for the widget')]/../input)[$index]"
     btn_save_Xpath = "(//button[contains(text(),'Save')])[$index]"
     btn_Video_Player_Location_Xpath = "(//span[contains(text(),'$position')]/../input)[1]"
     btn_Video_Player_floating_Location_Xpath = "(//span[contains(text(),'$position')]/../input)[3]"
@@ -141,7 +139,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,200)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "2")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "4")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(
@@ -165,7 +163,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,100)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "3")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "7")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(
@@ -187,7 +185,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,200)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "4")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "9")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(
@@ -216,7 +214,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,200)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "5")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "11")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(6)
                 sel1 = Select(
@@ -383,7 +381,7 @@ class CreateWidgetConfigurationPage:
         self.ipis = ImportProductsIntoStorePage(self.driver)
         ifr = self.driver.find_element(By.CSS_SELECTOR, self.ipis.frame_store_Xpath)
         self.driver.switch_to.frame(ifr)
-        time.sleep(5)
+        time.sleep(6)
         self.driver.find_element(By.XPATH, self.ipis.btn_profile_tab_Xpath.replace("$profileTab", ProfileTab)).click()
         time.sleep(5)
         print("Reset button is displayed")
