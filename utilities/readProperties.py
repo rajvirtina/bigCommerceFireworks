@@ -50,7 +50,7 @@ class ReadConfig:
         redirect = config.get('common info', 'redirectedUrl')
         return redirect
     
-       @staticmethod
+    @staticmethod
     def getStoreURL():
         store = config.get('common info', 'storeURL')
         return store
