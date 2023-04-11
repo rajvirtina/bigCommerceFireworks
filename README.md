@@ -1,32 +1,43 @@
-# Repository for BigCommerce Fireworks plugin
 
-# Prerequisites to run BigCommerce Fireworks plugin
+# Firework Shared Automation Library for OMS Integrations
 
-Pycharm.exe should be install
-
-# Command Prompt run below commands:
-
-Python -m pip install -U Selenium
+This library provides a shared automation framework for integrating Order Management Systems (OMS) automation test suites using Selenium with Python. The library contains pre-defined functions and methods to automate various example / reference tests on OMS Integrations processes such as business creation, test widget creation and configuration, embed business portal, product import, thereby reducing the time and effort required for OMS testing and integration. 
 
 
-# Below Librarires install after importing the project
+The test cases are available at the following link:
 
-Select the Interpreter and search below libraries and click install:
+[Link to test cases](https://docs.google.com/spreadsheets/d/1IS0BytdmsBmJMJFvEk3wP-HVo6kysE9gaLd6OTJDI0U/edit?usp=sharing)
 
-1) Selenium
-2) pytest
-3) pytest-html
-4) pytest-xdist
-5) pytest-order
-6) pytest-ordering
-7) pytest-order-modify
-8) pytest-metadata
-9) openpyxl
-10) allure-pytest
-11) allure-python-commons
+> To use the library, first install the required dependencies using the following command in the command prompt:
 
-# To Execute single class, use below comand line in the terminal
-pytest -v --browser chrome testCases/specificTestName.py --html=Reports/report.html
+ 
+```` Python -m pip install -U Selenium ````
 
-# To Execute all classes as once, use below comand line in the terminal
-pytest -v --browser chrome testCases/ --html=Reports/report.html
+> After importing the project, select the interpreter and install the following libraries:
+
+Selenium
+pytest
+pytest-html
+pytest-xdist
+pytest-order
+pytest-ordering
+pytest-order-modify
+pytest-metadata
+openpyxl
+allure-pytest
+allure-python-commons
+
+
+> To execute a single test case, use the following command in the terminal:
+
+ 
+```` pytest -v --browser chrome testCases/specificTestName.py --html=Reports/report.html ```` 
+
+> To execute all test cases at once, use the following command in the terminal:
+
+ 
+```` pytest -v --browser chrome testCases/ --html=Reports/report.html ````
+
+The library also includes sample test cases for reference, which can be used as a starting point for new OMS integrations.
+
+Overall, this shared automation library aims to streamline the testing process for OMS integrations and improve efficiency for developers working on OMS projects.
