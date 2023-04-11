@@ -15,17 +15,17 @@ The test cases are available at the following link:
 
 > After importing the project, select the interpreter and install the following libraries:
 
-Selenium
-pytest
-pytest-html
-pytest-xdist
-pytest-order
-pytest-ordering
-pytest-order-modify
-pytest-metadata
-openpyxl
-allure-pytest
-allure-python-commons
+* Selenium
+* pytest
+* pytest-html
+* pytest-xdist
+* pytest-order
+* pytest-ordering
+* pytest-order-modify
+* pytest-metadata
+* openpyxl
+* allure-pytest
+* allure-python-commons
 
 
 > To execute a single test case, use the following command in the terminal:
