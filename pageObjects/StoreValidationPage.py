@@ -48,7 +48,8 @@ class StoreValidationPage:
         self.driver.switch_to.frame(ifr)
         self.driver.find_element(By.ID, self.recaptchaCompletionMark_ID).click()
         time.sleep(20)
-        self.driver.switch_to.defaultContent()
+        self.driver.switch_to.default_content()
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.submitPreview_XPATH).click()
 
     def validateStoreTitlePage(self):
