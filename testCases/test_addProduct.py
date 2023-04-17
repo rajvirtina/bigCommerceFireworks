@@ -22,9 +22,12 @@ class Test_010_AddProduct:
         self.sp.addSingleProduct()
         self.logger.info("*** Added Product to the Cart ***")
         self.sp.checkOutValidation()
-        self.sp.productManageCheckoutPage()
+        self.sp.productManageInCheckoutPage()
         self.driver.save_screenshot(".\\Screenshots\\" + "ProductDetailsBasketPage.png")
+        self.sp.cartValidations()
         self.logger.info("*** Updated the Product count lands in checkout page ***")
+        self.driver.save_screenshot(".\\Screenshots\\" + "CartPage.png")
+        self.sp.cartEmpty()
         self.driver.close()
 
 
