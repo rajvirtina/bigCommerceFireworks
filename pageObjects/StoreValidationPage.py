@@ -52,6 +52,8 @@ class StoreValidationPage:
             try:
                 element = shadow_host.find_element(By.CSS_SELECTOR, self.nextProduct_Css)
                 # element = WebDriverWait(shadow_host, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, self.nextProduct_Css)))
+
+
                 if element.is_displayed():
                     element.click()
                     time.sleep(4)
