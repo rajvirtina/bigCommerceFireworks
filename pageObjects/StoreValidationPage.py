@@ -5,12 +5,15 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from PIL import Image
+from pytesseract import image_to_string
 
 
 class StoreValidationPage:
     previewCode_ID = "guestTkn"
     submitPreview_XPATH = "//input[@value='Submit']"
-    recaptchaCompletionMark_ClassName = "recaptcha-checkbox-borderAnimation"
+    recaptha_Xpath = "//iframe[@title='reCAPTCHA']"
+    recaptchaCompletionMark_ID = "recaptcha-anchor"
     storyBlock_Css = "div > fw-storyblock"
     nextProduct_Css = "[title='Next Card']"
     previousProduct_Css = "[title='Previous Card']"
@@ -25,14 +28,27 @@ class StoreValidationPage:
     backButton_Css = "[data-testid='back-button']"
     increaseButton_Css = "[data-testid='cart-item-increase-button']"
     decreaseButton_Css = "[data-testid='cart-item-decrease-button']"
-
+    productNameInCart_Css = ".fwn-1ey7c3n"
+    cartItemLabel_Xpath = "//a[@class='cart-item-name__label']"
+    cartRemoveProducts_Xpath = "//button[@class='cart-remove icon']"
+    cartRemoveProductsCancelBtn_Xpath = "//button[@class='cancel button']"
+    cartRemoveProductsConfirmBtn_Xpath = "//button[@class='confirm button']"
+    cartIncreaseQuantityInput_Xpath = "//div[@class='form-increment']/input"
+    cartDecreaseQuantity_Xpath = "//div[@class='form-increment']//child::button//span[starts-with(text(),'Decrease Quantity')]/.."
+    cartIncreaseQuantity_Xpath = "//div[@class='form-increment']//child::button//span[starts-with(text(),'Increase Quantity')]/.."
+    cartEmptyMessage_Xpath = "//div[@class='page-content']//h3"
+    homeLink_ClassName = "breadcrumb-label"
 
     def __init__(self, driver):
         self.driver = driver
 
     def enterPreviewCode(self, previewCode):
         self.driver.find_element(By.ID, self.previewCode_ID).send_keys(previewCode)
+        ifr = self.driver.find_element(By.XPATH, self.recaptha_Xpath)
+        self.driver.switch_to.frame(ifr)
+        self.driver.find_element(By.ID, self.recaptchaCompletionMark_ID).click()
         time.sleep(20)
+        self.driver.switch_to.defaultContent()
         self.driver.find_element(By.XPATH, self.submitPreview_XPATH).click()
 
     def validateStoreTitlePage(self):
@@ -43,7 +59,7 @@ class StoreValidationPage:
 
     def nextProductNavigate(self):
         cssSelectorForHost1 = "fw-storyblock[channel='zen_channel']"
-        self.driver.execute_script("window.scrollBy(0,200)", "")
+        self.driver.execute_script("window.scrollBy(0,250)", "")
         # shadow = self.driver.find_element(By.CSS_SELECTOR, cssSelectorForHost1).shadow_root
         root_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, cssSelectorForHost1)))
@@ -52,8 +68,6 @@ class StoreValidationPage:
             try:
                 element = shadow_host.find_element(By.CSS_SELECTOR, self.nextProduct_Css)
                 # element = WebDriverWait(shadow_host, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, self.nextProduct_Css)))
-
-
                 if element.is_displayed():
                     element.click()
                     time.sleep(4)
@@ -95,7 +109,7 @@ class StoreValidationPage:
         basketIcon.click()
         time.sleep(5)
 
-    def productManageCheckoutPage(self):
+    def productManageInCheckoutPage(self):
         cssSelectorForHost2 = "fw-storyblock[channel='zen_channel']"
         shadow = self.driver.find_element(By.CSS_SELECTOR, cssSelectorForHost2).shadow_root
         try:
@@ -139,6 +153,35 @@ class StoreValidationPage:
         print(UpdatedproductPrice)
         converted_UpdatedPrice = float(UpdatedproductPrice)
         assert converted_UpdatedPrice == converted_totalPrice + converted_totalPrice
-        shadow.find_element(By.CSS_SELECTOR, self.checkout_Css)
-        time.sleep(2)
 
+    def cartValidations(self):
+        cssSelectorForHost2 = "fw-storyblock[channel='zen_channel']"
+        shadow_host = self.driver.find_element(By.CSS_SELECTOR, cssSelectorForHost2)
+        shadow_root = self.driver.execute_script('return arguments[0].shadowRoot', shadow_host)
+        shadow_element = shadow_root.find_element(By.CSS_SELECTOR, self.productNameInCart_Css)
+        textNameInCheckout = shadow_element.text
+        print(textNameInCheckout)
+        checkOutButton = shadow_root.find_element(By.CSS_SELECTOR, self.checkout_Css)
+        self.driver.execute_script("arguments[0].click();", checkOutButton)
+        time.sleep(5)
+        productNameInCart = self.driver.find_element(By.XPATH, self.cartItemLabel_Xpath)
+        textNameInCart = productNameInCart.text
+        print(textNameInCart)
+        assert textNameInCart == textNameInCheckout
+
+    def cartEmpty(self):
+        self.driver.execute_script("window.scrollBy(0,200)", "")
+        self.driver.find_element(By.XPATH, self.cartRemoveProducts_Xpath).click()
+        time.sleep(3)
+        self.driver.find_element(By.XPATH, self.cartRemoveProductsCancelBtn_Xpath).click()
+        time.sleep(3)
+        self.driver.find_element(By.XPATH, self.cartRemoveProducts_Xpath).click()
+        time.sleep(3)
+        self.driver.find_element(By.XPATH, self.cartRemoveProductsConfirmBtn_Xpath).click()
+        time.sleep(3)
+        emptyText = self.driver.find_element(By.XPATH, self.cartEmptyMessage_Xpath).text
+        print(emptyText)
+        assert emptyText == "Your cart is empty"
+        self.driver.find_element(By.CLASS_NAME, self.homeLink_ClassName).click()
+        time.sleep(3)
+        self.driver.execute_script("window.scrollBy(0,200)", "")
