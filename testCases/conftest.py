@@ -1,7 +1,6 @@
 import os.path
 import time
-from py.xml import html
-
+from selenium.webdriver.chrome.service import Service
 import pytest
 from selenium import webdriver
 
@@ -10,8 +9,14 @@ from selenium import webdriver
 def setup(browser):
     if browser == 'chrome':
         global driver
-        driver = webdriver.Chrome()
-        driver.delete_all_cookies()
+        options = webdriver.ChromeOptions()
+        options.add_argument("--incognito")
+        #driver = webdriver.Chrome(options=options)
+        #options.add_argument("--headless")
+        #options.add_argument("--disable-gpu")
+        driver = webdriver.Chrome(options=options)
+                                  #, service=Service(
+            #executable_path=r"C:\\Users\\ACER\\Downloads\\chromedriver\\chromedriver.exe"))
         driver.maximize_window()
         driver.implicitly_wait(30)
         print("Launching Chrome browser.........")
@@ -77,4 +82,3 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_html_report_title(report):
     report.title = "Firework Applications!"
-

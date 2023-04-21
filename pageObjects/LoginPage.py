@@ -2,9 +2,14 @@ import time
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+from utilities.readProperties import ReadConfig
 
 
 class LoginPage:
+    userName = ReadConfig.getUseremail()
+    password = ReadConfig.getPassword()
+    emailHost = ReadConfig.getHostName()
+
     textbox_username_id = "user_email"
     textbox_password_id = "user_password"
     button_login_id = "login_submit_button"
@@ -24,17 +29,22 @@ class LoginPage:
     zohoMailOTP_Xpath = "(//td[@align='left' and @valign='top'])[17]/div/div/div/p/span"
     zohoMailProfileImg_Xpath = "//img[@class='zmavatar__image']"
     zohoMailSignOut_Xpath = "//button/child::span[contains(text(),'Sign out')]"
+    #######################
+    allMails_Xpath = "//tr[contains(@id,'row_$UserName')]"
+    tabInbox_Xpath = "//a[@id='pills-html-tab']"
+    message_body_frame_Xpath = "//iframe[@id='html_msg_body']"
+    mailinator_otp_xpath = "//div[contains(@id,'hs_cos_wrapper_module')]/p/span"
 
     def __init__(self, driver):
         self.driver = driver
 
-    def setusername(self, username):
+    def setusername(self):
         self.driver.find_element(By.ID, self.textbox_username_id).clear()
-        self.driver.find_element(By.ID, self.textbox_username_id).send_keys(username)
+        self.driver.find_element(By.ID, self.textbox_username_id).send_keys(self.userName)
 
-    def setpassword(self, password):
+    def setpassword(self):
         self.driver.find_element(By.ID, self.textbox_password_id).clear()
-        self.driver.find_element(By.ID, self.textbox_password_id).send_keys(password)
+        self.driver.find_element(By.ID, self.textbox_password_id).send_keys(self.password)
 
     def clickLogin(self):
         self.driver.find_element(By.ID, self.button_login_id).click()
@@ -44,10 +54,41 @@ class LoginPage:
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
 
     def selectStore(self):
-        time.sleep(5)
+        time.sleep(2)
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
+        time.sleep(8)
 
-    def mailLogIn(self, emailHost, mailID, mailPassword, folder, text):
+    def mailLogin(self):
+        time.sleep(10)
+        self.driver.execute_script("window.open('');")
+        self.driver.switch_to.window(self.driver.window_handles[1])
+        mail = self.userName.strip('@').split('@', 1)[0]
+        print(mail)
+        self.driver.get(self.emailHost + mail)
+        time.sleep(40)
+        elements = self.driver.find_elements(By.XPATH, self.allMails_Xpath.replace("$UserName", mail))
+        for element in elements:
+            time.sleep(10)
+            element.click()
+            break
+        ifr = self.driver.find_element(By.XPATH, self.message_body_frame_Xpath)
+        self.driver.switch_to.frame(ifr)
+        self.driver.execute_script("window.scrollBy(0,200)", "")
+        time.sleep(5)
+        otpText = self.driver.find_element(By.XPATH, self.mailinator_otp_xpath).text
+        myOTP = otpText.strip(' ').split(' ', 1)[0]
+        print(myOTP)
+        self.driver.close()
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        time.sleep(10)
+        self.driver.execute_script("window.scrollBy(0,200)", "")
+        time.sleep(5)
+        self.driver.find_element(By.ID, self.otpVerifyPage_ID).click()
+        self.driver.find_element(By.ID, self.otpVerifyPage_ID).send_keys(myOTP)
+        time.sleep(10)
+        self.driver.find_element(By.XPATH, self.verifyPageSubmit_Xpath).click()
+
+    def mailZohoLogIn(self, emailHost, mailID, mailPassword, folder, text):
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
         self.driver.get(emailHost)
