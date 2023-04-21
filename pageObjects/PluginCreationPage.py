@@ -101,7 +101,6 @@ class PluginCreationPage:
         element = self.driver.find_element(By.NAME, self.txtbox_email_firework_Name)
         emailID = element.get_attribute("value")
         print("Email ID Populated:" + emailID)
-        self.driver.find_element(By.ID, self.btn_continue_email_Id).click()
         time.sleep(5)
 
     def enteringOTP(self):
@@ -109,6 +108,7 @@ class PluginCreationPage:
         emailID = element.get_attribute("value")
         mail = emailID.strip('@').split('@', 1)[0]
         print(mail)
+        self.driver.find_element(By.ID, self.btn_continue_email_Id).click()
         self.lp = LoginPage(self.driver)
         time.sleep(10)
         self.driver.execute_script("window.open('');")
