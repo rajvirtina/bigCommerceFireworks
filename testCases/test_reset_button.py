@@ -8,15 +8,7 @@ from utilities.readProperties import ReadConfig
 
 
 class Test_008_ResetButton:
-    redirectedUrl = ReadConfig.getRedirectedURL()
-    userName = ReadConfig.getUseremail()
-    password = ReadConfig.getPassword()
     logger = LogGen.logger()
-    emailHost = ReadConfig.getHostName()
-    emailId = ReadConfig.getMailId()
-    emailPassword = ReadConfig.getMailPassword()
-    NameId = ReadConfig.getnameID()
-    websiteId = ReadConfig.getWebsite()
     baseURL = ReadConfig.getApplicationURL()
 
     @pytest.mark.order(8)
@@ -28,10 +20,10 @@ class Test_008_ResetButton:
         self.pp = PluginCreationPage(self.driver)
         self.cpp = ImportProductsIntoStorePage(self.driver)
         self.cwcp = CreateWidgetConfigurationPage(self.driver)
-        self.lp.setusername(self.userName)
-        self.lp.setpassword(self.password)
+        self.lp.setusername()
+        self.lp.setpassword()
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailHost, self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
+        self.lp.mailLogin()
         self.lp.selectAccount()
         self.lp.selectStore()
         self.logger.info("*** Successfully lands in the Bigcommerce DashBoard ***")

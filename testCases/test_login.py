@@ -6,12 +6,7 @@ from utilities.readProperties import ReadConfig
 
 class Test_001_Login:
     baseURL = ReadConfig.getApplicationURL()
-    userName = ReadConfig.getUseremail()
-    password = ReadConfig.getPassword()
     logger = LogGen.logger()
-    emailHost = ReadConfig.getHostName()
-    emailId = ReadConfig.getMailId()
-    emailPassword = ReadConfig.getMailPassword()
 
     @pytest.mark.order(1)
     @pytest.mark.regression
@@ -20,10 +15,10 @@ class Test_001_Login:
         self.driver = setup  # webdriver.Chrome()
         self.driver.get(self.baseURL)
         self.lp = LoginPage(self.driver)
-        self.lp.setusername(self.userName)
-        self.lp.setpassword(self.password)
+        self.lp.setusername()
+        self.lp.setpassword()
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailHost, self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
+        self.lp.mailLogin()
         self.lp.selectAccount()
         self.lp.selectStore()
         self.driver.save_screenshot(".\\Screenshots\\" + "test_login.png")
