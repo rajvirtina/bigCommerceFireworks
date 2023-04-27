@@ -3,7 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from utilities.readProperties import ReadConfig
-
+from selenium.webdriver.support.ui import Select
 
 class LoginPage:
     userName = ReadConfig.getUseremail()
@@ -13,9 +13,9 @@ class LoginPage:
     textbox_username_id = "user_email"
     textbox_password_id = "user_password"
     button_login_id = "login_submit_button"
-    select_account_type_xpath = "//select[@id='account-selector']"
+    select_account_type_id = "account-selector"
     button_continue_xpath = "//button[contains(text(),'Continue')]"
-    select_store_type_xpath = "//select[@id='store - selector']"
+    select_store_type_id = "store-selector"
     link_logout_linktext = "Logout"
     otpVerifyPage_ID = "device_verification_otp_code"
     verifyPageSubmit_Xpath = "//input[@name='commit' and @value='Verify']"
@@ -49,8 +49,16 @@ class LoginPage:
     def clickLogin(self):
         self.driver.find_element(By.ID, self.button_login_id).click()
 
-    def selectAccount(self):
+    def selectAccount(self, accountName, storeName):#Virtina#Virtina Sandbox for Multistore
         time.sleep(5)
+        drpAccount = Select(self.driver.find_element(By.ID, self.select_account_type_id))
+        drpAccount.select_by_visible_text(accountName)
+        time.sleep(2)
+        self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
+        time.sleep(3)
+        drpStore = Select(self.driver.find_element(By.ID, self.select_store_type_id))
+        drpStore.select_by_visible_text(storeName)
+        time.sleep(2)
         self.driver.find_element(By.XPATH, self.button_continue_xpath).click()
 
     def selectStore(self):
