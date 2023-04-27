@@ -2,6 +2,7 @@ import string
 import time
 import random
 
+from selenium.common import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 from selenium.webdriver import Keys, ActionChains
@@ -18,6 +19,9 @@ class CreateWidgetConfigurationPage:
     btn_all_grids_Xpath = "//div[starts-with(@x-bind,'btn')]"
     btn_specific_grids_Xpath = "//div[contains(text(),'$widgetName')]/img"
     btn_widget_forms_Xpath = "form > p"
+
+    drpdwn_channel_selects_Xpath = "(//label[contains(text(),'Channel List')]/../select)[$index]"
+    #drpdwn_channel_selects_Xpath = "(//select[@class='form-control'])[$index]"
     drpdwn_channel_selects_Xpath = "(//select[@class='form-control'])[$index]"
     drpdwn_playList_selects_Xpath = "(//label[contains(text(),'PlayList List')]/../select)[$index]"
     drpdwn_videoList_selects_Xpath = "(//label[text()='Videos']/../select)[$index]"
@@ -39,18 +43,26 @@ class CreateWidgetConfigurationPage:
     txt_page_builder_Xpath = "//div[text()='Page Builder']"
     txt_widgetName = "//div[contains(text(),'$widgetName')]/.."
     frame_edit_web_CSS = "div > iframe"
+    btn_edit_theme = "//span[contains(text(),'Edit theme')]//parent::button"
+    frame_store_Xpath = "//*[@title='App iframe']"
     dragAndDrop_Xpath = "(//div[text()='Drop widgets here']/..)"
-    dragAndDropSelect_Xpath = "(//div[text()='Drop widgets here']/..)[$index]"
+    #dragAndDropSelect_Xpath = "(//div[text()='Drop widgets here']/..)[$index]"
+    dragAndDropSelect_Xpath =  "/html/body/div[$index]/div/div"
     btn_saveweb_Xpath = "//div[text()='Save']/parent::button"
     btn_publish_Xpath = "//div[text()='Publish']/parent::button"
     btn_cnfrm_publish_Xpath = "//div[text()='Publish']/parent::button[@data-test-id='publish']"
     btn_logo_Xpath = "//div[@data-test-id='bc-logo']/parent::div"
-    btn_viewStore_Xpath = "//div[contains(@class,'viewStore')]/parent::button"
+    btn_channel_Xpath = "//span[text()='Channels']"
+    #btn_viewStore_Xpath = "//div[contains(@class,'viewStore')]/parent::button"
+    btn_viewStore_Xpath = "//*[contains(text(),'View Storefronts')]/parent::button"
+    btn_navigateStore_Id = "nav-viewStore"
     btn_reset_Xpath = "//span[contains(text(),'Reset')]/parent::button"
     btn_connect_Xpath = "//span[contains(text(),'Connect')]/parent::button"
     btn_widget_editAll_Xpath = "//span[text()='Edit']/parent::button"
     drpdwn_edit_videoText_Xpath = "(//label[text()='Videos'])[$index]"
     verify_profile_tabs_CSS = "button > p"
+    btn_channel_manager_menu_Xpath = "//*[text()='Channel Manager']"
+    select_store_name_Xpath = "//select[@class='form-control']"
     txt_search_widgetName_Xpath = "//input[@class='form-control' and @type='search']"
 
     def __init__(self, driver):
@@ -58,7 +70,7 @@ class CreateWidgetConfigurationPage:
 
     def addWidget(self, ProfileTab):
         self.iis = ImportProductsIntoStorePage(self.driver)
-        ifr = self.driver.find_element(By.CSS_SELECTOR, self.iis.frame_store_Xpath)
+        ifr = self.driver.find_element(By.XPATH, self.frame_store_Xpath)
         self.driver.switch_to.frame(ifr)
         time.sleep(7)
         self.driver.find_element(By.XPATH, self.iis.btn_profile_tab_Xpath.replace("$profileTab", ProfileTab)).click()
@@ -270,10 +282,10 @@ class CreateWidgetConfigurationPage:
             element[i].click()
             time.sleep(5)
             sel1 = Select(
-                self.driver.find_element(By.XPATH, self.drpdwn_playList_selects_Xpath.replace("$index", "1")))
+                self.driver.find_element(By.XPATH, self.drpdwn_playList_selects_Xpath.replace("$index", "5")))
             sel1.select_by_visible_text(playListName)
             time.sleep(4)
-            self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "6")).click()
+            self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "5")).click()
             time.sleep(3)
             self.driver.save_screenshot(".\\Screenshots\\" + "Edited" + playListName + res + ".png")
 
@@ -283,21 +295,23 @@ class CreateWidgetConfigurationPage:
         for i in range(elementSize):
             element[i].click()
             time.sleep(5)
-            element1 = self.driver.find_element(By.XPATH, self.drpdwn_edit_videoText_Xpath.replace("$index", "1"))
-            if element1.is_displayed():
+            try:
+                element1 = self.driver.find_element(By.XPATH, self.drpdwn_edit_videoText_Xpath.replace("$index", "3"))
+            except NoSuchElementException:
+                self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "5")).click()
+            else:
                 sel1 = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_videoList_selects_Xpath.replace("$index", "1")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_videoList_selects_Xpath.replace("$index", "3")))
                 sel1.select_by_visible_text(videoName)
                 time.sleep(5)
-                self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "6")).click()
-            else:
+                self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "5")).click()
                 print("Video option is not available for the widget")
 
     def editPositionOfWidget(self, widgetName, positionOfVideo):
         self.driver.find_element(By.XPATH, self.btn_widget_edit_Xpath.replace("$widgetName", widgetName)).click()
         self.driver.find_element(By.XPATH, self.btn_Video_Player_floating_Location_Xpath.replace("$position",
                                                                                                  positionOfVideo)).click()
-        self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "6")).click()
+        self.driver.find_element(By.XPATH, self.btn_save_Xpath.replace("$index", "5")).click()
 
     def deleteWidget(self):
         element = self.driver.find_elements(By.XPATH, self.btn_widget_deleteAll_Xpath)
@@ -307,40 +321,34 @@ class CreateWidgetConfigurationPage:
             element[i].click()
             break
 
-    def dragAndDrpWidgetToPageBuilder(self, menuName, manageTheme, widgetName):  # Storefront#Customize
+    def dragAndDrpWidgetToPageBuilder(self, widgetName):  # Storefront#Customize
         self.pc = PluginCreationPage(self.driver)
-        self.driver.find_element(By.ID, self.btn_home_Id).click()
-        self.driver.find_element(By.XPATH, self.pc.btn_menu_Xpath.replace('$mainMenu', menuName)).click()
-        self.driver.switch_to.frame(self.pc.myapps_frame_Id)
+        self.driver.find_element(By.XPATH, self.btn_channel_manager_menu_Xpath).click()
         time.sleep(5)
-        if manageTheme == "Customize":
-            self.driver.find_element(By.XPATH, self.btn_manage_theme_Xpath.replace('$themeManage', manageTheme)).click()
+        self.driver.switch_to.frame(self.pc.myapps_frame_Id)
+        self.driver.find_element(By.XPATH, self.btn_edit_theme).click()
+        time.sleep(2)
+        self.driver.switch_to.default_content()
+        ele = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, self.txt_page_builder_Xpath)))
+        element = self.driver.find_elements(By.XPATH, self.txt_widgetName.replace("$widgetName", widgetName))
+        elementSize = len(element)
+        print(elementSize)
+        for i in range(elementSize):
             time.sleep(5)
-            self.driver.switch_to.default_content()
-            ele = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, self.txt_page_builder_Xpath)))
-            element = self.driver.find_elements(By.XPATH, self.txt_widgetName.replace("$widgetName", widgetName))
-            elementSize = len(element)
-            print(elementSize)
-            for i in range(elementSize):
-                time.sleep(5)
-                self.driver.execute_script("arguments[0].scrollIntoView();", element[i])
-                time.sleep(5)
-                source1 = element[i]
-                time.sleep(8)
-                actions2 = ActionChains(self.driver)
-                actions2.click_and_hold(source1).perform()
-                ifr = self.driver.find_element(By.CSS_SELECTOR, self.frame_edit_web_CSS)
-                self.driver.switch_to.frame(ifr)
-                time.sleep(5)
-                #element1 = self.driver.find_elements(By.XPATH, self.dragAndDrop_Xpath)
-               # size = len(element1)
-               # for j in range(size):
-                time.sleep(5)
-                target1 = self.driver.find_element(By.XPATH, self.dragAndDropSelect_Xpath.replace("$index", "1"))
-                actions2 = ActionChains(self.driver)
-                actions2.move_to_element(target1).perform()
-                break
+            self.driver.execute_script("arguments[0].scrollIntoView();", element[i])
+            time.sleep(5)
+            source1 = element[i]
+            time.sleep(4)
+            ifr = self.driver.find_element(By.CSS_SELECTOR, self.frame_edit_web_CSS)
+            self.driver.switch_to.frame(ifr)
+            actions = ActionChains(self.driver)
+            time.sleep(5)
+            target1 = self.driver.find_element(By.XPATH, self.dragAndDropSelect_Xpath.replace("$index", "2"))
+            self.driver.execute_script("arguments[0].scrollIntoView();", target1)
+            time.sleep(3)
+            #actions.click_and_hold(source1).move_to_element(target1).release().perform()
+            #actions.drag_and_drop(source1, target1).release().perform()
+            break
         time.sleep(7)
         self.driver.switch_to.default_content()
         self.driver.find_element(By.XPATH, self.btn_saveweb_Xpath).click()
@@ -351,13 +359,16 @@ class CreateWidgetConfigurationPage:
         time.sleep(8)
         self.driver.find_element(By.XPATH, self.btn_logo_Xpath).click()
         time.sleep(5)
+        self.driver.find_element(By.XPATH,self.btn_channel_Xpath).click()
+        time.sleep(5)
         self.driver.find_element(By.XPATH, self.btn_viewStore_Xpath).click()
+        time.sleep(2)
+        self.driver.find_element(By.ID,self.btn_navigateStore_Id).click()
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
         time.sleep(5)
         self.driver.close()
         self.driver.switch_to.window(self.driver.window_handles[0])
-        self.driver.quit()
 
     def dragAndDrpWidgetToPageBuilder1(self, menuName, manageTheme, widgetName):  # Storefront#Customize
         self.pc = PluginCreationPage(self.driver)
@@ -381,33 +392,46 @@ class CreateWidgetConfigurationPage:
 
     def resetPlugIn(self, ProfileTab):
         self.ipis = ImportProductsIntoStorePage(self.driver)
-        ifr = self.driver.find_element(By.CSS_SELECTOR, self.ipis.frame_store_Xpath)
+        ifr = self.driver.find_element(By.XPATH, self.frame_store_Xpath)
         self.driver.switch_to.frame(ifr)
         time.sleep(5)
         self.driver.find_element(By.XPATH, self.ipis.btn_profile_tab_Xpath.replace("$profileTab", ProfileTab)).click()
         time.sleep(5)
-        print("Reset button is displayed")
-        self.driver.find_element(By.XPATH, self.btn_reset_Xpath).click()
-        time.sleep(7)
-        self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
+        try:
+            element = self.driver.find_element(By.XPATH, self.btn_reset_Xpath)
+        except NoSuchElementException:
+            self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
+        else:
+            element.click()
+            time.sleep(4)
+            self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
         self.driver.switch_to.default_content()
 
     def connectPlugIn(self, ProfileTab):
         self.ipis = ImportProductsIntoStorePage(self.driver)
-        ifr = self.driver.find_element(By.CSS_SELECTOR, self.ipis.frame_store_Xpath)
+        ifr = self.driver.find_element(By.XPATH, self.frame_store_Xpath)
         self.driver.switch_to.frame(ifr)
         time.sleep(5)
         self.driver.find_element(By.XPATH, self.ipis.btn_profile_tab_Xpath.replace("$profileTab", ProfileTab)).click()
         time.sleep(5)
-        print("Connect button is displayed")
-        self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
+        try:
+            element = self.driver.find_element(By.XPATH, self.btn_reset_Xpath)
+        except NoSuchElementException:
+            self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
+        else:
+            element.click()
+            time.sleep(4)
+            self.driver.find_element(By.XPATH, self.btn_connect_Xpath).click()
         self.driver.switch_to.default_content()
 
-    def verifyProfileTabs(self):
+    def verifyProfileTabs(self,storeName):
         self.iis = ImportProductsIntoStorePage(self.driver)
-        ifr = self.driver.find_element(By.CSS_SELECTOR, self.iis.frame_store_Xpath)
+        ifr = self.driver.find_element(By.XPATH, self.frame_store_Xpath)
         self.driver.switch_to.frame(ifr)
         time.sleep(5)
+        drpStoreName = Select(self.driver.find_element(By.XPATH, self.select_store_name_Xpath))
+        drpStoreName.select_by_visible_text(storeName)
+        time.sleep(2)
         element = self.driver.find_elements(By.CSS_SELECTOR, self.verify_profile_tabs_CSS)
         eleSize = len(element)
         for i in range(eleSize):

@@ -6,12 +6,7 @@ from utilities.readProperties import ReadConfig
 
 class Test_001_Login:
     baseURL = ReadConfig.getApplicationURL()
-    userName = ReadConfig.getUseremail()
-    password = ReadConfig.getPassword()
     logger = LogGen.logger()
-    emailHost = ReadConfig.getHostName()
-    emailId = ReadConfig.getMailId()
-    emailPassword = ReadConfig.getMailPassword()
 
     @pytest.mark.order(1)
     @pytest.mark.regression
@@ -20,16 +15,15 @@ class Test_001_Login:
         self.driver = setup  # webdriver.Chrome()
         self.driver.get(self.baseURL)
         self.lp = LoginPage(self.driver)
-        self.lp.setusername(self.userName)
-        self.lp.setpassword(self.password)
+        self.lp.setusername()
+        self.lp.setpassword()
         self.lp.clickLogin()
-        self.lp.mailLogIn(self.emailHost, self.emailId, self.emailPassword, "BigCommerceAuth", "continue")
-        self.lp.selectAccount()
-        self.lp.selectStore()
+        self.lp.mailLogin()
+        self.lp.selectAccount("Virtina", "Virtina Sandbox for Multistore")
         self.driver.save_screenshot(".\\Screenshots\\" + "test_login.png")
 
         act_title = self.driver.title
-        exp_title = "LatitudeFin BigCommerce Control Panel"
+        exp_title = "Virtina Sandbox for Multistore BigCommerce Control Panel"
 
         if act_title == exp_title:
             self.logger.info("*** Successfully lands in the Bigcommerce DashBoard ***")
