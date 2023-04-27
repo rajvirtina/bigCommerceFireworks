@@ -19,8 +19,10 @@ class CreateWidgetConfigurationPage:
     btn_all_grids_Xpath = "//div[starts-with(@x-bind,'btn')]"
     btn_specific_grids_Xpath = "//div[contains(text(),'$widgetName')]/img"
     btn_widget_forms_Xpath = "form > p"
+
     drpdwn_channel_selects_Xpath = "(//label[contains(text(),'Channel List')]/../select)[$index]"
     #drpdwn_channel_selects_Xpath = "(//select[@class='form-control'])[$index]"
+    drpdwn_channel_selects_Xpath = "(//select[@class='form-control'])[$index]"
     drpdwn_playList_selects_Xpath = "(//label[contains(text(),'PlayList List')]/../select)[$index]"
     drpdwn_videoList_selects_Xpath = "(//label[text()='Videos']/../select)[$index]"
     # txt_name_of_widget_Xpath = "(//input[@class='form-control'])['$index']"
@@ -151,7 +153,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,200)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "2")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "4")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(
@@ -175,7 +177,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,100)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "3")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "7")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(
@@ -197,7 +199,7 @@ class CreateWidgetConfigurationPage:
                 ele.send_keys(Keys.TAB)
                 self.driver.execute_script("window.scrollBy(0,200)", "")
                 sel = Select(
-                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "4")))
+                    self.driver.find_element(By.XPATH, self.drpdwn_channel_selects_Xpath.replace("$index", "9")))
                 sel.select_by_visible_text(channelName)
                 time.sleep(5)
                 sel1 = Select(

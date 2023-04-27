@@ -121,11 +121,8 @@ class PluginCreationPage:
         element = self.driver.find_element(By.NAME, self.txtbox_email_firework_Name)
         emailID = element.get_attribute("value")
         print("Email ID Populated:" + emailID)
-<<<<<<< Updated upstream
-=======
         element.clear()
         element.send_keys(self.userName)
->>>>>>> Stashed changes
         time.sleep(5)
 
     def selectStore(self, storeName):
@@ -143,11 +140,15 @@ class PluginCreationPage:
         emailID = element.get_attribute("value")
         mail = emailID.strip('@').split('@', 1)[0]
         print(mail)
+        if emailID == username:
+            print("Email ID Populated:" + emailID)
+        elif not emailID == username:
+            print("Incorrect Email ID Populated:" + emailID)
+        else:
+            print("No EmailId Existed")
+            element.send_keys(username)
         self.driver.find_element(By.ID, self.btn_continue_email_Id).click()
-<<<<<<< Updated upstream
         self.lp = LoginPage(self.driver)
-=======
->>>>>>> Stashed changes
         time.sleep(10)
         self.driver.execute_script("window.open('');")
         self.driver.switch_to.window(self.driver.window_handles[1])
